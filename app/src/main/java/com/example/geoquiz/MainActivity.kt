@@ -129,6 +129,42 @@ fun GeoQuizScreen() {
                 ) { Text("NEXT") }
             }
         }
+
+        // Показать результат на экране
+        if (showResult) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Quiz Completed!",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = "Your score: $correctCount / $total",
+                        fontSize = 24.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Button(
+                        onClick = {
+                            index = 0
+                            correctCount = 0
+                            answered = false
+                            showResult = false
+                        }
+                    ) { Text("Restart Quiz") }
+                }
+            }
+        }
     }
 }
 
