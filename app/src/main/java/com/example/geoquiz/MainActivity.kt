@@ -30,8 +30,27 @@ fun GeoQuizApp() {
     }
 }
 
+private data class Question(val text: String, val answerTrue: Boolean)
+
 @Composable
 fun GeoQuizScreen() {
+    // Массив вопросов
+    val questions: Array<Question> = remember {
+        arrayOf(
+            Question("Canberra is the capital of Australia.", true),
+            Question("The Pacific Ocean is larger than the Atlantic Ocean.", true),
+            Question("The Suez Canal connects the Red Sea and the Indian Ocean.", false),
+            Question("The source of the Nile River is in Egypt.", false),
+            Question("The Amazon River is the longest river in the Americas.", true),
+            Question("Lake Baikal is the world's oldest and deepest freshwater lake.", true),
+        )
+    }
+
+    var index by rememberSaveable { mutableIntStateOf(0) }
+
+    val total = questions.size
+    val currentQuestion = if (index < total) questions[index] else questions[total - 1]
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,6 +63,14 @@ fun GeoQuizScreen() {
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(bottom = 24.dp)
+        )
+
+        Text(
+            text = currentQuestion.text,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp)
         )
     }
 }
