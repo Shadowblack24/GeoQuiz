@@ -46,7 +46,8 @@ fun GeoQuizScreen() {
         )
     }
 
-    var index by rememberSaveable { mutableIntStateOf(0) }
+    var index by rememberSaveable { mutableIntStateOf(0) }         // номер текущего вопроса
+    var answered by rememberSaveable { mutableStateOf(false) }     // ответ дан?
 
     val total = questions.size
     val currentQuestion = if (index < total) questions[index] else questions[total - 1]
@@ -72,6 +73,27 @@ fun GeoQuizScreen() {
                 .fillMaxWidth()
                 .padding(vertical = 24.dp)
         )
+
+        // Кнопки TRUE/FALSE
+        if (!answered) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = { answered = true },
+                    modifier = Modifier.widthIn(min = 120.dp)
+                ) { Text("TRUE") }
+
+                Button(
+                    onClick = { answered = true },
+                    modifier = Modifier.widthIn(min = 120.dp)
+                ) { Text("FALSE") }
+            }
+        } else {
+            // Если ответ дан, добавляем пустое пространство
+            Spacer(Modifier.height(56.dp))
+        }
     }
 }
 
