@@ -48,6 +48,8 @@ fun GeoQuizScreen() {
 
     var index by rememberSaveable { mutableIntStateOf(0) }         // номер текущего вопроса
     var answered by rememberSaveable { mutableStateOf(false) }     // ответ дан?
+    var correctCount by rememberSaveable { mutableIntStateOf(0) }  // счётчик правильных ответов
+    var showResult by rememberSaveable { mutableStateOf(false) }   // показывать результат
 
     val total = questions.size
     val currentQuestion = if (index < total) questions[index] else questions[total - 1]
@@ -58,6 +60,9 @@ fun GeoQuizScreen() {
             .padding(horizontal = 20.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Добавлено расстояние между шапкой и названием приложения
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = "GeoQuiz",
             style = MaterialTheme.typography.headlineSmall,
@@ -75,24 +80,54 @@ fun GeoQuizScreen() {
         )
 
         // Кнопки TRUE/FALSE
-        if (!answered) {
+        if (!answered && !showResult) {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(
-                    onClick = { answered = true },
+                    onClick = {
+                        answered = true
+                        if (currentQuestion.answerTrue) correctCount++
+                        if (index == total - 1) {
+                            showResult = true
+                        }
+                    },
                     modifier = Modifier.widthIn(min = 120.dp)
                 ) { Text("TRUE") }
 
                 Button(
-                    onClick = { answered = true },
+                    onClick = {
+                        answered = true
+                        if (!currentQuestion.answerTrue) correctCount++
+                        if (index == total - 1) {
+                            showResult = true
+                        }
+                    },
                     modifier = Modifier.widthIn(min = 120.dp)
                 ) { Text("FALSE") }
             }
         } else {
             // Если ответ дан, добавляем пустое пространство
             Spacer(Modifier.height(56.dp))
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        // Кнопка NEXT для перехода к следующему вопросу
+        if (index < total - 1 && !showResult) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(
+                    onClick = {
+                        index++
+                        answered = false
+                    },
+                    enabled = answered
+                ) { Text("NEXT") }
+            }
         }
     }
 }
